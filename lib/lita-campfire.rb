@@ -1,1 +1,7 @@
+require 'lita'
 require 'lita/adapters/campfire'
+require 'lita/adapters/campfire/callback'
+require 'lita/adapters/campfire/connector'
+require 'net/http'
+require 'tinder'
+require 'uri'

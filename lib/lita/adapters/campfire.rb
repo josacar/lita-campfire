@@ -1,6 +1,3 @@
-require 'lita'
-require 'lita/adapters/campfire/connector'
-
 module Lita
   module Adapters
     class Campfire < Adapter

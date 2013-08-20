@@ -1,8 +1,3 @@
-require 'net/http'
-require 'uri'
-require 'tinder'
-require 'lita/adapters/campfire/callback'
-
 module Lita
   module Adapters
     class Campfire < Adapter
