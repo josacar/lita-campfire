@@ -2,15 +2,10 @@ require 'spec_helper'
 
 describe Campfire::Connector do
   let(:robot) { double }
-
   let(:subdomain) { 'mycampfire' }
-
   let(:apikey) { '2e9f45bb934c0fa13e9f19ee0901c316fda9fc1' }
-
   let(:rooms) { %w( 12345 41234 ) }
-
   let(:options) { { subdomain: subdomain, apikey: apikey, rooms: rooms } }
-
   let(:campfire) { double }
 
   subject { described_class.new(robot, options) }
