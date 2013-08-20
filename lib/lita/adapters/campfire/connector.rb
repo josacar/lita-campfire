@@ -17,7 +17,8 @@ module Lita
         end
 
         def join_rooms(rooms)
-          @campfire.rooms.select {|room| in_room?(room) }.each do |room|
+          rooms.each do |room_id|
+            room = fetch_room(room_id)
             room.join
             Callback.new(@robot).room_message(room)
           end
@@ -32,8 +33,14 @@ module Lita
         end
 
         private
-        def in_room?(room)
-          @rooms.include?(room.id.to_s)
+
+        def fetch_room(room_id)
+          @campfire.find_room_by_id(room_id).tap do |room|
+            if room.nil?
+              raise RoomNotAvailable,
+                "Make sure you have access to room #{ room_id }"
+            end
+          end
         end
       end
     end
