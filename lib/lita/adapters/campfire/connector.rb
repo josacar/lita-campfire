@@ -2,18 +2,16 @@ module Lita
   module Adapters
     class Campfire < Adapter
       class Connector
-        def initialize(robot, opts, campfire_interface = Tinder::Campfire)
+        def initialize(robot, opts)
           @robot     = robot
           @subdomain = opts.fetch(:subdomain)
           @apikey    = opts.fetch(:apikey)
           @rooms     = opts.fetch(:rooms)
           @debug     = opts.fetch(:debug) { false }
-
-          @campfire_interface = campfire_interface
         end
 
         def connect
-          @campfire = @campfire_interface.new(@subdomain, token: @apikey)
+          @campfire = Tinder::Campfire.new(@subdomain, token: @apikey)
         end
 
         def join_rooms(rooms)

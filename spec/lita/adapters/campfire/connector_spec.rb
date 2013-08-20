@@ -11,19 +11,17 @@ describe Campfire::Connector do
 
   let(:options) { { subdomain: subdomain, apikey: apikey, rooms: rooms } }
 
-  let(:campfire_interface) { double('Campfire Interface') }
-
   let(:campfire) { double }
 
-  subject { described_class.new(robot, options, campfire_interface) }
+  subject { described_class.new(robot, options) }
 
   before do
-    allow(campfire_interface).to receive(:new).and_return(campfire)
+    allow(Tinder::Campfire).to receive(:new).and_return(campfire)
   end
 
   describe '#connect' do
     it 'connects the campfire connection' do
-      expect(campfire_interface).to receive(:new).with(subdomain, token: apikey)
+      expect(Tinder::Campfire).to receive(:new).with(subdomain, token: apikey)
       subject.connect
     end
   end
