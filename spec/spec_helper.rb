@@ -9,3 +9,4 @@ SimpleCov.start { add_filter "/spec/" }
 require "lita-campfire"
 require "lita/rspec"
 
+include Lita::Adapters
