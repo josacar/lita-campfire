@@ -3,7 +3,42 @@ module Lita
     class Campfire < Adapter
       class Connector
         def initialize(robot, opts)
+          @robot     = robot
+          @subdomain = opts.fetch(:subdomain)
+          @apikey    = opts.fetch(:apikey)
+          @rooms     = opts.fetch(:rooms)
+          @debug     = opts.fetch(:debug) { false }
+        end
 
+        def connect
+          @campfire = Tinder::Campfire.new(@subdomain, token: @apikey)
+        end
+
+        def join_rooms(rooms)
+          rooms.each do |room_id|
+            room = fetch_room(room_id)
+            room.join
+            Callback.new(@robot).room_message(room)
+          end
+        end
+
+        def send_messages(room, messages)
+          @campfire.find_room_by_id(room.id).tap do |my_room|
+            messages.each do |message|
+              my_room.speak message
+            end
+          end
+        end
+
+        private
+
+        def fetch_room(room_id)
+          @campfire.find_room_by_id(room_id).tap do |room|
+            if room.nil?
+              raise RoomNotAvailable,
+                "Make sure you have access to room #{ room_id }"
+            end
+          end
         end
       end
     end
