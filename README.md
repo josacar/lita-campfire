@@ -12,6 +12,12 @@
 Add lita-campfire to your Lita instance's Gemfile:
 
 ```ruby
+gem "lita-campfire"
+```
+
+or if you want to use the bleeding edge version:
+
+```ruby
 gem "lita-campfire", :git => 'https://github.com/josacar/lita-campfire.git'
 ```
 
