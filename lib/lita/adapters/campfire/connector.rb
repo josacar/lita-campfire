@@ -23,7 +23,7 @@ module Lita
         end
 
         def send_messages(room, messages)
-          @campfire.find_room_by_id(room.id).tap do |my_room|
+          fetch_room(room.id).tap do |my_room|
             messages.each do |message|
               if message.include?("\n")
                 my_room.paste message
