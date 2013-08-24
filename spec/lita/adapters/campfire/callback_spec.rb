@@ -27,8 +27,8 @@ describe Campfire::Callback do
           user: campfire_user) }
 
         it 'passes the message to Robot#receive' do
-          expect(Lita::User).to receive(:new).with(1, name: 'Bender Bending Rodriguez').and_return(user)
           expect(Lita::Source).to receive(:new).with(user, room).and_return(source)
+          expect(Lita::User).to receive(:create).with(1, name: 'Bender Bending Rodriguez').and_return(user)
           expect(Lita::Message).to receive(:new).with(robot, text, source).and_return(message)
           expect(robot).to receive(:receive).with(message)
           subject.room_message(room)
