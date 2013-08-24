@@ -13,8 +13,8 @@ module Lita
           room.listen do |m|
             if MESSAGE_TYPES.include?(m.type)
               text    = m.body
-              source  = Source.new(user, room)
               user    = create_user(m.user)
+              source  = Source.new(user, room.id.to_s)
               message = Message.new(@robot, text, source)
               @robot.receive message
             end
