@@ -4,6 +4,8 @@
 
 [![Build Status](https://secure.travis-ci.org/josacar/lita-campfire.png)](http://travis-ci.org/josacar/lita-campfire)
 [![Coverage Status](https://coveralls.io/repos/josacar/lita-campfire/badge.png)](https://coveralls.io/r/josacar/lita-campfire)
+[![Code Climate](https://codeclimate.com/github/josacar/lita-campfire.png)](https://codeclimate.com/github/josacar/lita-campfire)
+[![Dependency Status](https://gemnasium.com/josacar/lita-campfire.png)](https://gemnasium.com/josacar/lita-campfire)
 
 **lita-campfire** is an adapter for [Lita](https://github.com/jimmycuadra/lita) that allows you to use the robot with [Campfire](https://campfirenow.com).
 
