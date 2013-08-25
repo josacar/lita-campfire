@@ -74,7 +74,7 @@ describe Campfire::Connector do
     context 'with a multi line message' do
       let(:message) { "I'm gonna drink 'til I reboot.\nNow I'm too drunk" }
 
-      it 'speaks each message into room' do
+      it 'pastes each message into room' do
         expect(room).to receive(:paste).with(message)
         subject.send_messages double(id: 1), [ message ]
       end
