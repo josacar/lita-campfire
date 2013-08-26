@@ -55,8 +55,6 @@ describe Campfire::Connector do
   end
 
   describe '#send_messages' do
-    let(:message) { "I'm gonna drink 'til I reboot." }
-
     let(:room) { double }
 
     before do
@@ -64,9 +62,22 @@ describe Campfire::Connector do
       subject.connect
     end
 
-    it 'speaks each message into room' do
-      expect(room).to receive(:speak).with(message)
-      subject.send_messages double(id: 1), [ message ]
+    context 'with a one line message' do
+      let(:message) { "I'm gonna drink 'til I reboot." }
+
+      it 'speaks each message into room' do
+        expect(room).to receive(:speak).with(message)
+        subject.send_messages double(id: 1), [ message ]
+      end
+    end
+
+    context 'with a multi line message' do
+      let(:message) { "I'm gonna drink 'til I reboot.\nNow I'm too drunk" }
+
+      it 'pastes each message into room' do
+        expect(room).to receive(:paste).with(message)
+        subject.send_messages double(id: 1), [ message ]
+      end
     end
   end
 end
