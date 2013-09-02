@@ -30,13 +30,14 @@ describe Campfire::Connector do
         subject.connect
       end
 
-      it 'joins each room' do
+      it 'joins each room, registers the users and listens for messages' do
         expect(Campfire::Callback).to receive(:new).
-          with(robot).
+          with(robot, room).
           and_return(callback = double('Callback'))
-        expect(callback).to receive(:room_message).with(room)
 
         expect(room).to receive(:join)
+        expect(callback).to receive(:listen)
+        expect(callback).to receive(:register_users)
 
         subject.join_rooms [ double ]
       end

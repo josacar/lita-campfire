@@ -18,12 +18,14 @@ module Lita
           rooms.each do |room_id|
             room = fetch_room(room_id)
             room.join
-            Callback.new(@robot).room_message(room)
+            callback = Callback.new(@robot, room)
+            callback.register_users
+            callback.listen
           end
         end
 
-        def send_messages(room, messages)
-          @campfire.find_room_by_id(room.id).tap do |my_room|
+        def send_messages(room_id, messages)
+          fetch_room(room_id).tap do |my_room|
             messages.each do |message|
               if message.include?("\n")
                 my_room.paste message
