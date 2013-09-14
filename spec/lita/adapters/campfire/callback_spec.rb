@@ -23,10 +23,13 @@ describe Campfire::Callback do
   describe '#listen' do
     %w( TextMessage PasteMessage ).each do |message_type|
       describe "with a #{message_type}" do
-        let(:campfire_message) { double(
-          type: message_type,
-          body: text,
-          user: campfire_user) }
+        let(:campfire_message) do
+          double('Event',
+                 type:     message_type,
+                 body:     text,
+                 user:     campfire_user,
+                 room_id:  1)
+        end
 
         it 'passes the message to Robot#receive' do
           expect(Lita::User).to receive(:create).with(1, name: 'Bender Bending Rodriguez').and_return(user)

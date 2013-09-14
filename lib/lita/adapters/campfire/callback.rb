@@ -68,7 +68,7 @@ module Lita
           def _receive(event)
             text    = event.body
             user    = @callback.create_user(event.user)
-            source  = Source.new(user, @room.id.to_s)
+            source  = Source.new(user, event.room_id.to_s)
             message = Message.new(@robot, text, source)
             @robot.receive message
           end
