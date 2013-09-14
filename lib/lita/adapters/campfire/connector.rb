@@ -42,7 +42,7 @@ module Lita
           @campfire.find_room_by_id(room_id).tap do |room|
             if room.nil?
               raise RoomNotAvailable,
-                "Make sure you have access to room #{ room_id }"
+                "Make sure you have access to room #{ room_id.inspect }"
             end
           end
         end
