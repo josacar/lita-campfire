@@ -21,6 +21,9 @@ describe Campfire::Callback do
   subject { described_class.new(robot, room) }
 
   describe '#listen' do
+    before do
+      allow(Thread).to receive(:new).and_yield
+    end
     %w( TextMessage PasteMessage ).each do |message_type|
       describe "with a #{message_type}" do
         let(:event) do

@@ -16,9 +16,7 @@ module Lita
 
         def listen
           @room.listen do |event|
-            @receivers.each do |receiver|
-              receiver.receive event
-            end
+            receive event
           end
         end
 
@@ -32,6 +30,14 @@ module Lita
           user_data = user_data.dup
           user_id = user_data.delete(:id)
           User.create(user_id, user_data)
+        end
+
+        def receive(event)
+          Thread.new do
+            @receivers.each do |receiver|
+              receiver.receive event
+            end
+          end
         end
 
         class EventReceiver
