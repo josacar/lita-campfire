@@ -8,10 +8,11 @@ module Lita
           @apikey    = opts.fetch(:apikey)
           @rooms     = opts.fetch(:rooms)
           @debug     = opts.fetch(:debug) { false }
+          @ssl_verify = opts.fetch(:ssl_verify)
         end
 
         def connect
-          @campfire = Tinder::Campfire.new(@subdomain, token: @apikey)
+          @campfire = Tinder::Campfire.new(@subdomain, token: @apikey, ssl_verify: @ssl_verify)
         end
 
         def join_rooms(rooms)
