@@ -8,7 +8,7 @@ module Lita
           @apikey    = opts.fetch(:apikey)
           @rooms     = opts.fetch(:rooms)
           @debug     = opts.fetch(:debug) { false }
-          @ssl_verify = opts.fetch(:ssl_verify)
+          @ssl_verify = opts[:ssl_verify] # leave nil, let tinder default
         end
 
         def connect
