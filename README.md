@@ -36,6 +36,7 @@ Values needed to work like apikey can be found on 'My info' link when logged, su
 ### Optional attributes
 
 * `debug` (Boolean) - If `true`, turns on the underlying Campfire library's (tinder) logger, which is fairly verbose. Default: `false`.
+* `ssl_verify` (Boolean) - If `false`, turns off ssl verification in the underlying Campfire library (tinder).
 
 **Note** You must set also `config.robot.name` and `config.robot.mention_name` to work.
 

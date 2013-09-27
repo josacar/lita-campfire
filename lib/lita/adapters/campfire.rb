@@ -13,7 +13,8 @@ module Lita
           subdomain: config.subdomain,
           apikey: config.apikey,
           rooms: config.rooms,
-          debug: config.debug
+          debug: config.debug,
+          ssl_verify: config.ssl_verify
         )
       end
 

@@ -5,7 +5,7 @@ describe Campfire::Connector do
   let(:subdomain) { 'mycampfire' }
   let(:apikey) { '2e9f45bb934c0fa13e9f19ee0901c316fda9fc1' }
   let(:rooms) { %w( 12345 41234 ) }
-  let(:options) { { subdomain: subdomain, apikey: apikey, rooms: rooms } }
+  let(:options) { { subdomain: subdomain, apikey: apikey, rooms: rooms, ssl_verify: true } }
   let(:campfire) { double }
 
   subject { described_class.new(robot, options) }
@@ -16,7 +16,7 @@ describe Campfire::Connector do
 
   describe '#connect' do
     it 'connects the campfire connection' do
-      expect(Tinder::Campfire).to receive(:new).with(subdomain, token: apikey)
+      expect(Tinder::Campfire).to receive(:new).with(subdomain, token: apikey, ssl_verify: true)
       subject.connect
     end
   end
