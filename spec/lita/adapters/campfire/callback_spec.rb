@@ -8,25 +8,31 @@ describe Campfire::Callback do
     end
   end
 
-  let(:campfire_message) { double }
-  let(:campfire_user)    { { id: 1, name: 'Bender Bending Rodriguez' } }
-  let(:message)          { double('Message') }
-  let(:robot)            { double('Robot', mention_name: 'Robot') }
-  let(:room)             { DummyRoom.new(1, campfire_message, users) }
-  let(:source)           { double('Source') }
-  let(:text)             { "Yes it's the apocalypse alright. I always though is have a hand in it." }
-  let(:user)             { double('User') }
-  let(:users)            { [ {id: 2, name: 'Bender'}, {id: 3, name: 'Washbucket'} ] }
+  let(:event)         { double('Event') }
+  let(:campfire_user) { { id: 1, name: 'Bender Bending Rodriguez' } }
+  let(:message)       { double('Message') }
+  let(:robot)         { double('Robot', mention_name: 'Robot') }
+  let(:room)          { DummyRoom.new(1, event, users) }
+  let(:source)        { double('Source') }
+  let(:text)          { "Yes it's the apocalypse alright. I always though is have a hand in it." }
+  let(:user)          { double('User') }
+  let(:users)         { [ {id: 2, name: 'Bender'}, {id: 3, name: 'Washbucket'} ] }
 
   subject { described_class.new(robot, room) }
 
   describe '#listen' do
+    before do
+      allow(Thread).to receive(:new).and_yield
+    end
     %w( TextMessage PasteMessage ).each do |message_type|
       describe "with a #{message_type}" do
-        let(:campfire_message) { double(
-          type: message_type,
-          body: text,
-          user: campfire_user) }
+        let(:event) do
+          double('Event',
+                 type:     message_type,
+                 body:     text,
+                 user:     campfire_user,
+                 room_id:  1)
+        end
 
         it 'passes the message to Robot#receive' do
           expect(Lita::User).to receive(:create).with(1, name: 'Bender Bending Rodriguez').and_return(user)
@@ -39,9 +45,7 @@ describe Campfire::Callback do
     end
 
     describe 'EnterMessage' do
-      let(:campfire_message) { double(
-        type: 'EnterMessage',
-        user: campfire_user) }
+      let(:event) { double('Event', type: 'EnterMessage', user: campfire_user) }
 
       it 'creates a user' do
         expect(Lita::User).to receive(:create).with(1, name: 'Bender Bending Rodriguez').and_return(user)
