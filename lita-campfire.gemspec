@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name          = "lita-campfire"
-  spec.version       = "0.1"
+  spec.version       = "0.1.1"
   spec.authors       = ["Jose Luis Salas", "Zac Stewart"]
   spec.email         = ["josacar@gmail.com", "zgstewart@gmail.com"]
   spec.description   = %q{A Campfire adapter for Lita.}
