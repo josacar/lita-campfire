@@ -4,7 +4,7 @@ describe Campfire::Connector do
   let(:robot) { double }
   let(:subdomain) { 'mycampfire' }
   let(:apikey) { '2e9f45bb934c0fa13e9f19ee0901c316fda9fc1' }
-  let(:rooms) { %w( 12345 41234 ) }
+  let(:rooms) { %w( 12345 ) }
   let(:options) { { subdomain: subdomain, apikey: apikey, rooms: rooms } }
   let(:campfire) { double }
 
@@ -39,7 +39,7 @@ describe Campfire::Connector do
         expect(callback).to receive(:listen)
         expect(callback).to receive(:register_users)
 
-        subject.join_rooms [ double ]
+        subject.join_rooms
       end
     end
 
@@ -50,7 +50,7 @@ describe Campfire::Connector do
       end
 
       it 'raises an exception' do
-        expect { subject.join_rooms [ double ] }.to raise_error(Campfire::RoomNotAvailable)
+        expect { subject.join_rooms }.to raise_error(Campfire::RoomNotAvailable)
       end
     end
   end
@@ -79,6 +79,20 @@ describe Campfire::Connector do
         expect(room).to receive(:paste).with(message)
         subject.send_messages double(id: 1), [ message ]
       end
+    end
+  end
+
+  describe '#disconnect' do
+    let(:room) { double('Room', id: 666) }
+
+    before do
+      allow(campfire).to receive(:find_room_by_id).and_return(room)
+      subject.connect
+    end
+
+    it "leaves joined rooms" do
+      expect(room).to receive(:leave)
+      subject.disconnect
     end
   end
 end
