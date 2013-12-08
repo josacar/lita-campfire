@@ -12,14 +12,14 @@ module Lita
           robot,
           subdomain: config.subdomain,
           apikey: config.apikey,
-          rooms: config.rooms,
+          rooms: rooms,
           debug: config.debug
         )
       end
 
       def run
         connector.connect
-        connector.join_rooms rooms
+        connector.join_rooms
         sleep
       rescue Interrupt
         disconnect

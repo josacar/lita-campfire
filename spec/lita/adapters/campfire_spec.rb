@@ -41,7 +41,7 @@ describe Lita::Adapters::Campfire do
     it 'join specified rooms' do
       rooms = ['room1', 'room2']
       Lita.config.adapter.rooms = rooms
-      expect(subject.connector).to receive(:join_rooms).with(rooms)
+      expect(subject.connector).to receive(:join_rooms)
       subject.run
     end
 
