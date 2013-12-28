@@ -13,7 +13,8 @@ module Lita
           subdomain: config.subdomain,
           apikey: config.apikey,
           rooms: rooms,
-          debug: config.debug
+          debug: config.debug,
+          tinder: config.tinder
         )
       end
 

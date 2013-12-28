@@ -26,6 +26,16 @@ describe Lita::Adapters::Campfire do
     expect { subject }.to raise_error(SystemExit)
   end
 
+  it 'can receive hash with tinder options' do
+    tinder_options = { timeout: 30, auto_reconnect: false }
+    Lita.configure do |config|
+      config.adapter.tinder = tinder_options
+    end
+
+    expect(described_class::Connector).to receive(:new).with(robot, hash_including(:tinder => tinder_options))
+    subject
+  end
+
   describe '#run' do
     before do
       allow(subject.connector).to receive(:connect)
