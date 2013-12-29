@@ -36,6 +36,7 @@ Values needed to work like apikey can be found on 'My info' link when logged, su
 ### Optional attributes
 
 * `debug` (Boolean) - If `true`, turns on the underlying Campfire library's (tinder) logger, which is fairly verbose. Default: `false`.
+* `tinder` (Hash) - If set passes the options to tinder listen method when called
 
 **Note** You must set also `config.robot.name` and `config.robot.mention_name` to work.
 
