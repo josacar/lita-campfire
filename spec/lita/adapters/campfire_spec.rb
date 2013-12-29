@@ -29,10 +29,10 @@ describe Lita::Adapters::Campfire do
   it 'can receive hash with tinder options' do
     tinder_options = { timeout: 30, auto_reconnect: false }
     Lita.configure do |config|
-      config.adapter.tinder = tinder_options
+      config.adapter.tinder_options = tinder_options
     end
 
-    expect(described_class::Connector).to receive(:new).with(robot, hash_including(:tinder => tinder_options))
+    expect(described_class::Connector).to receive(:new).with(robot, hash_including(:tinder_options => tinder_options))
     subject
   end
 

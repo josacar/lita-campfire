@@ -63,7 +63,7 @@ describe Campfire::Connector do
           subdomain: subdomain,
           apikey: apikey,
           rooms: rooms,
-          tinder: tinder_options
+          tinder_options: tinder_options
         }
       end
 

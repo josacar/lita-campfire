@@ -14,7 +14,7 @@ module Lita
           apikey: config.apikey,
           rooms: rooms,
           debug: config.debug,
-          tinder: config.tinder
+          tinder_options: config.tinder_options
         )
       end
 

@@ -8,7 +8,7 @@ module Lita
           @apikey         = opts.fetch(:apikey)
           @rooms          = opts.fetch(:rooms)
           @debug          = opts.fetch(:debug) { false }
-          @tinder_options = opts.fetch(:tinder) { Hash.new }
+          @tinder_options = opts.fetch(:tinder_options) { Hash.new }
         end
 
         def connect
