@@ -111,6 +111,7 @@ describe Campfire::Connector do
     let(:room) { double('Room', id: 666) }
 
     before do
+      allow(Lita.logger).to receive(:info)
       allow(campfire).to receive(:find_room_by_id).and_return(room)
       subject.connect
     end
