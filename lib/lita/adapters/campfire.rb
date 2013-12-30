@@ -2,7 +2,7 @@ module Lita
   module Adapters
     class Campfire < Adapter
       require_configs :subdomain, :apikey, :rooms
-      OPTIONAL_CONFIG_OPTIONS = %w(debug tinder_options)
+      OPTIONAL_CONFIG_OPTIONS = %i(debug tinder_options)
 
       attr_reader :connector
 
@@ -58,13 +58,11 @@ module Lita
       end
 
       def optional_config_options
-        options = Hash.new
-        OPTIONAL_CONFIG_OPTIONS.each do |config_option|
-          config_option_sym = config_option.to_sym
-          config_option_value = config.public_send(config_option_sym)
-          options[config_option_sym] = config_option_value if config_option_value
+        OPTIONAL_CONFIG_OPTIONS.inject({}) do |options,config_option|
+          config_option_value = config.public_send(config_option)
+          options.merge!(config_option => config_option_value) if config_option_value
+          options
         end
-        options
       end
     end
 
