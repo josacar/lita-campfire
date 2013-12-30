@@ -2,19 +2,24 @@ module Lita
   module Adapters
     class Campfire < Adapter
       require_configs :subdomain, :apikey, :rooms
+      OPTIONAL_CONFIG_OPTIONS = %w(debug tinder_options)
 
       attr_reader :connector
 
       def initialize(robot)
         super
 
-        @connector = Connector.new(
-          robot,
+        options = {
           subdomain: config.subdomain,
           apikey: config.apikey,
           rooms: rooms,
-          debug: config.debug,
-          tinder_options: config.tinder_options
+        }
+
+        options.merge!(optional_config_options)
+
+        @connector = Connector.new(
+          robot,
+          options
         )
       end
 
@@ -50,6 +55,16 @@ module Lita
 
       def disconnect
         connector.disconnect
+      end
+
+      def optional_config_options
+        options = Hash.new
+        OPTIONAL_CONFIG_OPTIONS.each do |config_option|
+          config_option_sym = config_option.to_sym
+          config_option_value = config.public_send(config_option_sym)
+          options[config_option_sym] = config_option_value if config_option_value
+        end
+        options
       end
     end
 
