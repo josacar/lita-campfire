@@ -1,17 +1,19 @@
 require 'spec_helper'
 
 describe Campfire::Connector do
-  let(:robot) { double }
+  let(:robot) { instance_double(Lita::Robot) }
   let(:subdomain) { 'mycampfire' }
   let(:apikey) { '2e9f45bb934c0fa13e9f19ee0901c316fda9fc1' }
   let(:rooms) { %w( 12345 ) }
   let(:options) { { subdomain: subdomain, apikey: apikey, rooms: rooms } }
-  let(:campfire) { double }
+  let(:campfire) { instance_double(Tinder::Campfire) }
+  let(:room) { instance_double(Tinder::Room) }
 
   subject { described_class.new(robot, options) }
 
   before do
     allow(Tinder::Campfire).to receive(:new).and_return(campfire)
+    allow(campfire).to receive(:find_room_by_id).and_return(room)
   end
 
   describe '#connect' do
@@ -21,78 +23,72 @@ describe Campfire::Connector do
     end
   end
 
-  describe '#join_rooms' do
-    describe 'when I have access to the room' do
-      let(:room) { double('Room', id: 666) }
-
-      before do
-        allow(campfire).to receive(:find_room_by_id).and_return(room)
-        subject.connect
-      end
-
-      it 'joins each room, registers the users and listens for messages' do
-        expect(Campfire::Callback).to receive(:new).
-          with(robot, room).
-          and_return(callback = double('Callback'))
-
-        expect(room).to receive(:join)
-        expect(callback).to receive(:listen)
-        expect(callback).to receive(:register_users)
-
-        subject.join_rooms
-      end
-    end
-
-    describe "when I don't have access to the room" do
-      before do
-        allow(campfire).to receive(:find_room_by_id).and_return(nil)
-        subject.connect
-      end
-
-      it 'raises an exception' do
-        expect { subject.join_rooms }.to raise_error(Campfire::RoomNotAvailable)
-      end
-    end
-  end
-
-  describe '#send_messages' do
-    let(:room) { double }
-
+  context 'when connected to campfire' do
     before do
-      allow(campfire).to receive(:find_room_by_id).and_return(room)
       subject.connect
     end
 
-    context 'with a one line message' do
-      let(:message) { "I'm gonna drink 'til I reboot." }
+    describe '#disconnect' do
 
-      it 'speaks each message into room' do
-        expect(room).to receive(:speak).with(message)
-        subject.send_messages double(id: 1), [ message ]
+      it "leaves joined rooms" do
+        expect(room).to receive(:leave)
+        subject.disconnect
       end
     end
 
-    context 'with a multi line message' do
-      let(:message) { "I'm gonna drink 'til I reboot.\nNow I'm too drunk" }
+    describe '#join_rooms' do
+      describe 'when I have access to the room' do
+        let(:callback) { instance_double(Campfire::Callback) }
+        it 'joins each room, registers the users and listens for messages' do
+          expect(Campfire::Callback).to receive(:new).
+            with(robot, room).
+            and_return(callback)
 
-      it 'pastes each message into room' do
-        expect(room).to receive(:paste).with(message)
-        subject.send_messages double(id: 1), [ message ]
+          expect(room).to receive(:join)
+          expect(callback).to receive(:listen)
+          expect(callback).to receive(:register_users)
+
+          subject.join_rooms
+        end
+      end
+
+      describe "when I don't have access to the room" do
+        before do
+          allow(campfire).to receive(:find_room_by_id).and_return(nil)
+        end
+
+        it 'raises an exception' do
+          expect { subject.join_rooms }.to raise_error(Campfire::RoomNotAvailable)
+        end
       end
     end
-  end
 
-  describe '#disconnect' do
-    let(:room) { double('Room', id: 666) }
+    describe '#send_messages' do
+      context 'with a one line message' do
+        let(:message) { "I'm gonna drink 'til I reboot." }
 
-    before do
-      allow(campfire).to receive(:find_room_by_id).and_return(room)
-      subject.connect
+        it 'speaks each message into room' do
+          expect(room).to receive(:speak).with(message)
+          subject.send_messages room, [ message ]
+        end
+      end
+
+      context 'with a multi line message' do
+        let(:message) { "I'm gonna drink 'til I reboot.\nNow I'm too drunk" }
+
+        it 'pastes each message into room' do
+          expect(room).to receive(:paste).with(message)
+          subject.send_messages room, [ message ]
+        end
+      end
     end
 
-    it "leaves joined rooms" do
-      expect(room).to receive(:leave)
-      subject.disconnect
+    describe '#set_topic' do
+      let(:topic) { 'Let it be wadus' }
+      it 'sets toom topic' do
+        expect(room).to receive(:topic=).with(topic)
+        subject.set_topic(room, topic)
+      end
     end
   end
 end
