@@ -2,6 +2,7 @@
 
 ## Continuous Integration
 
+[![Gem Version](https://badge.fury.io/rb/lita-campfire.png)](http://badge.fury.io/rb/lita-campfire)
 [![Build Status](https://secure.travis-ci.org/josacar/lita-campfire.png)](http://travis-ci.org/josacar/lita-campfire)
 [![Coverage Status](https://coveralls.io/repos/josacar/lita-campfire/badge.png)](https://coveralls.io/r/josacar/lita-campfire)
 [![Code Climate](https://codeclimate.com/github/josacar/lita-campfire.png)](https://codeclimate.com/github/josacar/lita-campfire)
