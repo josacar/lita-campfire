@@ -58,10 +58,9 @@ module Lita
       end
 
       def optional_config_options
-        OPTIONAL_CONFIG_OPTIONS.inject({}) do |options,config_option|
+        OPTIONAL_CONFIG_OPTIONS.each_with_object({}) do |config_option, options|
           config_option_value = config.public_send(config_option)
-          options.merge!(config_option => config_option_value) if config_option_value
-          options
+          options[config_option] = config_option_value if config_option_value
         end
       end
     end
