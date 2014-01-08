@@ -27,6 +27,7 @@ describe Campfire::Connector do
     before do
       subject.connect
     end
+    let(:callback) { instance_double(Campfire::Callback) }
 
     describe '#disconnect' do
 
@@ -36,9 +37,31 @@ describe Campfire::Connector do
       end
     end
 
+    describe 'when tinder options are set' do
+      let(:tinder_options) { { timeout: 30 } }
+      let(:options) do
+        {
+          subdomain: subdomain,
+          apikey: apikey,
+          rooms: rooms,
+          tinder_options: tinder_options
+        }
+      end
+
+      it 'passes options to underlying tinder lib' do
+        allow(campfire).to receive(:find_room_by_id).and_return(room)
+        subject.connect
+        allow(Campfire::Callback).to receive(:new).and_return(callback)
+
+        allow(room).to receive(:join)
+        allow(callback).to receive(:register_users)
+        expect(callback).to receive(:listen).with(tinder_options)
+        subject.join_rooms
+      end
+    end
+
     describe '#join_rooms' do
       describe 'when I have access to the room' do
-        let(:callback) { instance_double(Campfire::Callback) }
         it 'joins each room, registers the users and listens for messages' do
           expect(Campfire::Callback).to receive(:new).
             with(robot, room).
@@ -84,7 +107,13 @@ describe Campfire::Connector do
     end
 
     describe '#set_topic' do
+      before do
+        allow(Lita.logger).to receive(:info)
+        allow(campfire).to receive(:find_room_by_id).and_return(room)
+        subject.connect
+      end
       let(:topic) { 'Let it be wadus' }
+
       it 'sets toom topic' do
         expect(room).to receive(:topic=).with(topic)
         subject.set_topic(room, topic)

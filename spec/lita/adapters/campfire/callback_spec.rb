@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Campfire::Callback do
 
   class DummyRoom < Struct.new(:id, :message, :users)
-    def listen
+    def listen(options={})
       yield message
     end
   end
@@ -53,6 +53,15 @@ describe Campfire::Callback do
       end
     end
 
+    describe 'when options are set in connector' do
+      let(:room) { double(:room) }
+      it 'passes options to underlying tinder' do
+        tinder_options = { timeout: 30 }
+
+        expect(room).to receive(:listen).with(tinder_options)
+        subject.listen(tinder_options)
+      end
+    end
   end
 
   describe '#register_users' do

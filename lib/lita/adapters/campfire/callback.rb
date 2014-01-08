@@ -14,8 +14,8 @@ module Lita
           end
         end
 
-        def listen
-          @room.listen do |event|
+        def listen(options={})
+          @room.listen(options) do |event|
             receive event
           end
         end

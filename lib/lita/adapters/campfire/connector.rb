@@ -3,11 +3,12 @@ module Lita
     class Campfire < Adapter
       class Connector
         def initialize(robot, opts)
-          @robot     = robot
-          @subdomain = opts.fetch(:subdomain)
-          @apikey    = opts.fetch(:apikey)
-          @rooms     = opts.fetch(:rooms)
-          @debug     = opts.fetch(:debug) { false }
+          @robot          = robot
+          @subdomain      = opts.fetch(:subdomain)
+          @apikey         = opts.fetch(:apikey)
+          @rooms          = opts.fetch(:rooms)
+          @debug          = opts.fetch(:debug) { false }
+          @tinder_options = opts.fetch(:tinder_options) { Hash.new }
         end
 
         def connect
@@ -28,7 +29,7 @@ module Lita
             room.join
             callback = Callback.new(@robot, room)
             callback.register_users
-            callback.listen
+            callback.listen(@tinder_options)
           end
         end
 

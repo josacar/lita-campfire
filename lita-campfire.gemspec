@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name          = "lita-campfire"
-  spec.version       = "0.1.2"
+  spec.version       = "0.1.3"
   spec.authors       = ["Jose Luis Salas", "Zac Stewart"]
   spec.email         = ["josacar@gmail.com", "zgstewart@gmail.com"]
   spec.description   = %q{A Campfire adapter for Lita.}
@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler", "~> 1.5"
   spec.add_development_dependency "rake"
-  spec.add_development_dependency "rspec", "= 3.0.0.beta1"
+  spec.add_development_dependency "rspec", "~> 3.0.0.beta1"
   spec.add_development_dependency "simplecov"
   spec.add_development_dependency "coveralls"
 end

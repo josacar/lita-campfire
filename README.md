@@ -1,7 +1,6 @@
 # Campfire adapter for Lita
 
-## Continuous Integration
-
+[![Gem Version](https://badge.fury.io/rb/lita-campfire.png)](http://badge.fury.io/rb/lita-campfire)
 [![Build Status](https://secure.travis-ci.org/josacar/lita-campfire.png)](http://travis-ci.org/josacar/lita-campfire)
 [![Coverage Status](https://coveralls.io/repos/josacar/lita-campfire/badge.png)](https://coveralls.io/r/josacar/lita-campfire)
 [![Code Climate](https://codeclimate.com/github/josacar/lita-campfire.png)](https://codeclimate.com/github/josacar/lita-campfire)
@@ -36,6 +35,7 @@ Values needed to work like apikey can be found on 'My info' link when logged, su
 ### Optional attributes
 
 * `debug` (Boolean) - If `true`, turns on the underlying Campfire library's (tinder) logger, which is fairly verbose. Default: `false`.
+* `tinder_options` (Hash) - If set passes the options to tinder listen method when called
 
 **Note** You must set also `config.robot.name` and `config.robot.mention_name` to work.
 
@@ -59,6 +59,7 @@ Lita.configure do |config|
   config.adapter.apikey = ENV["CAMPFIRE_APIKEY"]
   config.adapter.rooms = ENV["CAMPFIRE_ROOMS"].split(',')
   config.adapter.debug = false
+  config.adapter.tinder_options = { timeout: 30, user_agent: 'lita-campfire' }
 
   config.redis.url = ENV["REDISTOGO_URL"]
   config.http.port = ENV["PORT"]
