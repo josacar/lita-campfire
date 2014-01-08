@@ -22,8 +22,10 @@ describe Campfire::Connector do
   end
 
   describe '#join_rooms' do
+    let(:callback) { double(:Callback) }
+    let(:room) { double('Room', id: 666) }
+
     describe 'when I have access to the room' do
-      let(:room) { double('Room', id: 666) }
 
       before do
         allow(campfire).to receive(:find_room_by_id).and_return(room)
@@ -33,7 +35,7 @@ describe Campfire::Connector do
       it 'joins each room, registers the users and listens for messages' do
         expect(Campfire::Callback).to receive(:new).
           with(robot, room).
-          and_return(callback = double('Callback'))
+          and_return(callback)
 
         expect(room).to receive(:join)
         expect(callback).to receive(:listen)
@@ -51,6 +53,29 @@ describe Campfire::Connector do
 
       it 'raises an exception' do
         expect { subject.join_rooms }.to raise_error(Campfire::RoomNotAvailable)
+      end
+    end
+
+    describe 'when tinder options are set' do
+      let(:tinder_options) { { timeout: 30 } }
+      let(:options) do
+        {
+          subdomain: subdomain,
+          apikey: apikey,
+          rooms: rooms,
+          tinder_options: tinder_options
+        }
+      end
+
+      it 'passes options to underlying tinder lib' do
+        allow(campfire).to receive(:find_room_by_id).and_return(room)
+        subject.connect
+        allow(Campfire::Callback).to receive(:new).and_return(callback)
+
+        allow(room).to receive(:join)
+        allow(callback).to receive(:register_users)
+        expect(callback).to receive(:listen).with(tinder_options)
+        subject.join_rooms
       end
     end
   end
@@ -86,6 +111,7 @@ describe Campfire::Connector do
     let(:room) { double('Room', id: 666) }
 
     before do
+      allow(Lita.logger).to receive(:info)
       allow(campfire).to receive(:find_room_by_id).and_return(room)
       subject.connect
     end
