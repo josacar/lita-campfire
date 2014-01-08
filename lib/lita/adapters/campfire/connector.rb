@@ -46,9 +46,7 @@ module Lita
         end
 
         def set_topic(room_id, topic)
-          fetch_room(room_id).tap do |my_room|
-            my_room.topic = topic
-          end
+          fetch_room(room_id).topic = topic
         end
 
         private
