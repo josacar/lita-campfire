@@ -8,14 +8,14 @@ describe Campfire::Callback do
     end
   end
 
-  let(:event)         { double('Event') }
+  let(:event)         { instance_double('Event') }
   let(:campfire_user) { { id: 1, name: 'Bender Bending Rodriguez' } }
-  let(:message)       { double('Message') }
-  let(:robot)         { double('Robot', mention_name: 'Robot') }
+  let(:message)       { instance_double(Lita::Message) }
+  let(:robot)         { instance_double(Lita::Robot, mention_name: 'Robot') }
   let(:room)          { DummyRoom.new(1, event, users) }
-  let(:source)        { double('Source') }
+  let(:source)        { instance_double(Lita::Source) }
   let(:text)          { "Yes it's the apocalypse alright. I always though is have a hand in it." }
-  let(:user)          { double('User') }
+  let(:user)          { instance_double(Lita::User) }
   let(:users)         { [ {id: 2, name: 'Bender'}, {id: 3, name: 'Washbucket'} ] }
 
   subject { described_class.new(robot, room) }
@@ -27,7 +27,7 @@ describe Campfire::Callback do
     %w( TextMessage PasteMessage ).each do |message_type|
       describe "with a #{message_type}" do
         let(:event) do
-          double('Event',
+          instance_double('Event',
                  type:     message_type,
                  body:     text,
                  user:     campfire_user,
@@ -45,7 +45,7 @@ describe Campfire::Callback do
     end
 
     describe 'EnterMessage' do
-      let(:event) { double('Event', type: 'EnterMessage', user: campfire_user) }
+      let(:event) { instance_double('Event', type: 'EnterMessage', user: campfire_user) }
 
       it 'creates a user' do
         expect(Lita::User).to receive(:create).with(1, name: 'Bender Bending Rodriguez').and_return(user)

@@ -13,8 +13,8 @@ describe Lita::Adapters::Campfire do
 
   subject { described_class.new(robot) }
 
-  let(:robot) { double("Lita::Robot") }
-  let(:connector) { double("Lita::Adapters::Campfire::Connector") }
+  let(:robot) { instance_double(Lita::Robot) }
+  let(:connector) { instance_double(Lita::Adapters::Campfire::Connector) }
 
   it "registers with Lita" do
     expect(Lita.adapters[:campfire]).to eql(described_class)
@@ -79,7 +79,7 @@ describe Lita::Adapters::Campfire do
 
   describe '#send_messages' do
     it 'sends messages to rooms' do
-      source = double("Lita::Source", room: "room_id")
+      source = instance_double(Lita::Source, room: "room_id")
       expect(subject.connector).to receive(:send_messages).with(
         'room_id',
         ["Hello!"]
@@ -90,7 +90,7 @@ describe Lita::Adapters::Campfire do
 
   describe "#set_topic" do
     it "sets a new topic for a room" do
-      source = double("Lita::Source", room: "room_id")
+      source = instance_double(Lita::Source, room: "room_id")
       expect(subject.connector).to receive(:set_topic).with(
         "room_id",
         "Topic"

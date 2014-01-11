@@ -15,6 +15,14 @@ module Lita
           @campfire = Tinder::Campfire.new(@subdomain, token: @apikey)
         end
 
+        def disconnect
+          Lita.logger.info("Disconnecting from Campfire.")
+          rooms.each do |room_id|
+            room = fetch_room(room_id)
+            room.leave
+          end
+        end
+
         def join_rooms
           rooms.each do |room_id|
             room = fetch_room(room_id)
@@ -37,12 +45,8 @@ module Lita
           end
         end
 
-        def disconnect
-          Lita.logger.info("Disconnecting from Campfire.")
-          rooms.each do |room_id|
-            room = fetch_room(room_id)
-            room.leave
-          end
+        def set_topic(room_id, topic)
+          fetch_room(room_id).topic = topic
         end
 
         private
