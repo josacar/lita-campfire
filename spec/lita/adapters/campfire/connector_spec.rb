@@ -13,7 +13,6 @@ describe Campfire::Connector do
 
   before do
     allow(Tinder::Campfire).to receive(:new).and_return(campfire)
-    allow(campfire).to receive(:find_room_by_id).and_return(room)
   end
 
   describe '#connect' do
@@ -25,13 +24,14 @@ describe Campfire::Connector do
 
   context 'when connected to campfire' do
     before do
+      allow(campfire).to receive(:find_room_by_id).and_return(room)
       subject.connect
     end
     let(:callback) { instance_double(Campfire::Callback) }
 
     describe '#disconnect' do
-
       it "leaves joined rooms" do
+      allow(Lita.logger).to receive(:info)
         expect(room).to receive(:leave)
         subject.disconnect
       end
@@ -107,11 +107,6 @@ describe Campfire::Connector do
     end
 
     describe '#set_topic' do
-      before do
-        allow(Lita.logger).to receive(:info)
-        allow(campfire).to receive(:find_room_by_id).and_return(room)
-        subject.connect
-      end
       let(:topic) { 'Let it be wadus' }
 
       it 'sets toom topic' do
