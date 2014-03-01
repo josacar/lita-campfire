@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe Campfire::Connector do
   let(:robot) { instance_double(Lita::Robot) }
+  let(:robot_id) { 2 }
   let(:subdomain) { 'mycampfire' }
   let(:apikey) { '2e9f45bb934c0fa13e9f19ee0901c316fda9fc1' }
   let(:rooms) { %w( 12345 ) }
@@ -51,6 +52,7 @@ describe Campfire::Connector do
       it 'passes options to underlying tinder lib' do
         allow(campfire).to receive(:find_room_by_id).and_return(room)
         subject.connect
+        allow(campfire).to receive_message_chain(:me,:id).and_return(robot_id)
         allow(Campfire::Callback).to receive(:new).and_return(callback)
 
         allow(room).to receive(:join)
@@ -63,8 +65,9 @@ describe Campfire::Connector do
     describe '#join_rooms' do
       describe 'when I have access to the room' do
         it 'joins each room, registers the users and listens for messages' do
+          allow(campfire).to receive_message_chain(:me,:id).and_return(robot_id)
           expect(Campfire::Callback).to receive(:new).
-            with(robot, room).
+            with(robot: robot, room: room, robot_id: robot_id).
             and_return(callback)
 
           expect(room).to receive(:join)

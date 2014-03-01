@@ -3,11 +3,12 @@ module Lita
     class Campfire < Adapter
       class Callback
 
-        attr_reader :robot, :room
+        attr_reader :robot, :room, :robot_id
 
-        def initialize(robot, room)
-          @robot = robot
-          @room  = room
+        def initialize(options)
+          @robot    = options.fetch(:robot)
+          @room     = options.fetch(:room)
+          @robot_id = options.fetch(:robot_id)
 
           @receivers = [MessageReceiver, EnterReceiver].map do |receiver_type|
             receiver_type.new(self)
@@ -54,6 +55,7 @@ module Lita
             @callback = callback
             @robot    = callback.robot
             @room     = callback.room
+            @robot_id = callback.robot_id
           end
 
           def receive(event)
@@ -62,8 +64,14 @@ module Lita
 
           private
 
+          attr_reader :robot_id
+
           def receives?(event)
-            self.class.message_types.include?(event.type)
+            self.class.message_types.include?(event.type) && !bot_message?(event.user)
+          end
+
+          def bot_message?(user)
+            robot_id == user.id
           end
         end
 
@@ -90,7 +98,6 @@ module Lita
           end
 
         end
-
       end
     end
   end
