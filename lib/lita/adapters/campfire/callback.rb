@@ -67,10 +67,10 @@ module Lita
           attr_reader :robot_id
 
           def receives?(event)
-            self.class.message_types.include?(event.type) && !bot_message?(event.user)
+            self.class.message_types.include?(event.type) && !robot?(event.user)
           end
 
-          def bot_message?(user)
+          def robot?(user)
             robot_id == user.id
           end
         end
