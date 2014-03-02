@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     lita-campfire (0.1.4)
-      lita (~> 3.0.0)
+      lita (>= 2.7.0, < 4.0.0)
       tinder (~> 1.9.4)
 
 GEM
