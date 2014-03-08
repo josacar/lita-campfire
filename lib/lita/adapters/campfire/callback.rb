@@ -15,8 +15,10 @@ module Lita
         end
 
         def listen(options={})
-          @room.listen(options) do |event|
-            receive event
+          Thread.new do
+            @room.listen(options) do |event|
+              receive event
+            end
           end
         end
 
