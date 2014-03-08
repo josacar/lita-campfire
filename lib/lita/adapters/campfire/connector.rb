@@ -12,7 +12,7 @@ module Lita
         end
 
         def connect
-          @campfire = Tinder::Campfire.new(@subdomain, token: @apikey)
+          @campfire = Tinder::Campfire.new(subdomain, token: apikey)
         end
 
         def disconnect
@@ -27,9 +27,9 @@ module Lita
           rooms.each do |room_id|
             room = fetch_room(room_id)
             room.join
-            callback = Callback.new(@robot, room)
+            callback = Callback.new(robot: robot, room: room, robot_id: robot_id)
             callback.register_users
-            callback.listen(@tinder_options)
+            callback.listen(tinder_options)
           end
         end
 
@@ -51,15 +51,20 @@ module Lita
 
         private
 
-        attr_reader :rooms
+        attr_reader :rooms, :subdomain, :apikey, :tinder_options, :robot
+        attr_accessor :campfire
 
         def fetch_room(room_id)
-          @campfire.find_room_by_id(room_id).tap do |room|
+          campfire.find_room_by_id(room_id).tap do |room|
             if room.nil?
               raise RoomNotAvailable,
                 "Make sure you have access to room #{ room_id.inspect }"
             end
           end
+        end
+
+        def robot_id
+          campfire.me.id
         end
       end
     end

@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'hashie'
 
 describe Campfire::Callback do
 
@@ -9,7 +10,9 @@ describe Campfire::Callback do
   end
 
   let(:event)         { instance_double('Event') }
-  let(:campfire_user) { { id: 1, name: 'Bender Bending Rodriguez' } }
+  let(:campfire_user) { Hashie::Mash.new({ id: 1, name: 'Bender Bending Rodriguez' }) }
+  let(:robot_id)      { 2 }
+  let(:robot_user)    { Hashie::Mash.new({ id: robot_id, name: 'Hubot bot' }) }
   let(:message)       { instance_double(Lita::Message) }
   let(:robot)         { instance_double(Lita::Robot, mention_name: 'Robot') }
   let(:room)          { DummyRoom.new(1, event, users) }
@@ -18,7 +21,7 @@ describe Campfire::Callback do
   let(:user)          { instance_double(Lita::User) }
   let(:users)         { [ {id: 2, name: 'Bender'}, {id: 3, name: 'Washbucket'} ] }
 
-  subject { described_class.new(robot, room) }
+  subject { described_class.new(robot: robot, room: room, robot_id: robot_id) }
 
   describe '#listen' do
     before do
@@ -26,20 +29,37 @@ describe Campfire::Callback do
     end
     %w( TextMessage PasteMessage ).each do |message_type|
       describe "with a #{message_type}" do
-        let(:event) do
-          instance_double('Event',
-                 type:     message_type,
-                 body:     text,
-                 user:     campfire_user,
-                 room_id:  1)
+        context 'when message from user' do
+          let(:event) do
+            instance_double('Event',
+                            type:     message_type,
+                            body:     text,
+                            user:     campfire_user,
+                            room_id:  1)
+          end
+
+          it 'passes the message to Robot#receive' do
+            expect(Lita::User).to receive(:create).with(1, name: 'Bender Bending Rodriguez').and_return(user)
+            expect(Lita::Source).to receive(:new).with(user: user, room: '1').and_return(source)
+            expect(Lita::Message).to receive(:new).with(robot, text, source).and_return(message)
+            expect(robot).to receive(:receive).with(message)
+            subject.listen
+          end
         end
 
-        it 'passes the message to Robot#receive' do
-          expect(Lita::User).to receive(:create).with(1, name: 'Bender Bending Rodriguez').and_return(user)
-          expect(Lita::Source).to receive(:new).with(user: user, room: '1').and_return(source)
-          expect(Lita::Message).to receive(:new).with(robot, text, source).and_return(message)
-          expect(robot).to receive(:receive).with(message)
-          subject.listen
+        context 'when message from robot' do
+          let(:event) do
+            instance_double('Event',
+                            type:     message_type,
+                            body:     text,
+                            user:     robot_user,
+                            room_id:  1)
+          end
+
+          it 'does not pass the message to Robot#receive' do
+            expect(robot).not_to receive(:receive).with(message)
+            subject.listen
+          end
         end
       end
     end
