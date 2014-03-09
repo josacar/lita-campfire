@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Lita::Adapters::Campfire do
+describe Lita::Adapters::Campfire, lita: true do
   before do
     Lita.configure do |config|
       config.adapter.subdomain = 'foodomain'

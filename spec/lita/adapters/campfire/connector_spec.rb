@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Campfire::Connector do
+describe Campfire::Connector, lita: true do
   let(:robot) { instance_double(Lita::Robot) }
   let(:robot_id) { 2 }
   let(:subdomain) { 'mycampfire' }
@@ -32,7 +32,6 @@ describe Campfire::Connector do
 
     describe '#disconnect' do
       it "leaves joined rooms" do
-      allow(Lita.logger).to receive(:info)
         expect(room).to receive(:leave)
         subject.disconnect
       end
