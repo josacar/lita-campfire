@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name          = 'lita-campfire'
-  spec.version       = '0.2.0'
+  spec.version       = '0.2.1'
   spec.authors       = ['Jose Luis Salas', 'Zac Stewart']
   spec.email         = ['josacar@gmail.com', 'zgstewart@gmail.com']
   spec.description   = %q{A Campfire adapter for Lita.}
@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
   spec.metadata      = { 'lita_plugin_type' => 'adapter' }
 
   spec.add_runtime_dependency 'lita', '>= 2.7.0', '< 4.0.0'
-  spec.add_runtime_dependency 'tinder', '~> 1.9.4'
+  spec.add_runtime_dependency 'tinder', '~> 1.10.0'
 
   spec.add_development_dependency 'bundler', '~> 1.6'
   spec.add_development_dependency 'rake'
