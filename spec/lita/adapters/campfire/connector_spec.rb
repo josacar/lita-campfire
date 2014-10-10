@@ -106,6 +106,15 @@ describe Campfire::Connector, lita: true do
           subject.send_messages room, [ message ]
         end
       end
+
+      context 'with a sound' do
+        let(:message) { "/play yeah" }
+
+        it 'plays a sound into room' do
+          expect(room).to receive(:play).with(message.sub("/play ",""))
+          subject.send_messages room, [ message ]
+        end
+      end
     end
 
     describe '#set_topic' do

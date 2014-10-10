@@ -38,6 +38,8 @@ module Lita
             messages.each do |message|
               if message.include?("\n")
                 my_room.paste message
+              elsif message.start_with?("/play ")
+                my_room.play message.sub("/play ", "")
               else
                 my_room.speak message
               end
