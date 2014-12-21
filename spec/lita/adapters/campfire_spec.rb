@@ -2,10 +2,12 @@ require 'spec_helper'
 
 describe Lita::Adapters::Campfire, lita: true do
   before do
-    Lita.configure do |config|
-      config.adapter.subdomain = 'foodomain'
-      config.adapter.apikey = 'fooapikey'
-      config.adapter.rooms = ['fooroom']
+    registry.register_adapter(:campfire, described_class)
+
+    registry.configure do |config|
+      config.adapters.campfire.subdomain = 'foodomain'
+      config.adapters.campfire.apikey = 'fooapikey'
+      config.adapters.campfire.rooms = ['fooroom']
     end
 
     allow(described_class::Connector).to receive(:new).and_return(connector)
@@ -13,37 +15,21 @@ describe Lita::Adapters::Campfire, lita: true do
 
   subject { described_class.new(robot) }
 
-  let(:robot) { instance_double(Lita::Robot) }
+  let(:robot) { Lita::Robot.new(registry) }
   let(:connector) { instance_double(Lita::Adapters::Campfire::Connector) }
 
   it "registers with Lita" do
     expect(Lita.adapters[:campfire]).to eql(described_class)
   end
 
-  it "requires config.subdomain, config.apikey and config.rooms" do
-    Lita.clear_config
-    expect(Lita.logger).to receive(:fatal).with(/subdomain, apikey, rooms/)
-    expect { subject }.to raise_error(SystemExit)
-  end
-
-  context 'passing optional variables' do
-    optional_config = described_class::OPTIONAL_CONFIG_OPTIONS
-    optional_config.each do |option|
-      it "does not set #{option} hash value if option is not set" do
-        expect(described_class::Connector).not_to receive(:new).with(robot, hash_including(option.to_sym))
-        subject
-      end
+  it 'can receive hash with tinder options' do
+    tinder_options = { timeout: 30, auto_reconnect: false }
+    Lita.configure do |config|
+      config.adapters.campfire.tinder_options = tinder_options
     end
 
-    it 'can receive hash with tinder options' do
-      tinder_options = { timeout: 30, auto_reconnect: false }
-      Lita.configure do |config|
-        config.adapter.tinder_options = tinder_options
-      end
-
-      expect(described_class::Connector).to receive(:new).with(robot, hash_including(:tinder_options => tinder_options))
-      subject
-    end
+    expect(described_class::Connector).to receive(:new).with(robot, hash_including(:tinder_options => tinder_options))
+    subject
   end
 
   describe '#run' do
