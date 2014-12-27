@@ -34,6 +34,7 @@ describe Lita::Adapters::Campfire, lita: true do
 
   describe '#run' do
     before do
+      allow(EM).to receive(:run).and_yield
       allow(subject.connector).to receive(:connect)
       allow(subject.connector).to receive(:join_rooms)
       allow(subject).to receive(:sleep)

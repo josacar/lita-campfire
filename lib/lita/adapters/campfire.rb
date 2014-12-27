@@ -1,3 +1,5 @@
+require 'eventmachine'
+
 module Lita
   module Adapters
     class Campfire < Adapter
@@ -30,8 +32,10 @@ module Lita
       end
 
       def run
-        connector.connect
-        connector.join_rooms
+        EM.run do
+          connector.connect
+          connector.join_rooms
+        end
         sleep
       rescue Interrupt
         disconnect
